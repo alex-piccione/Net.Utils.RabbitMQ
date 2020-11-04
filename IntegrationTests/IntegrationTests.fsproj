@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="consumer.test.fs" />
     <Compile Include="publisher.test.fs" />
   </ItemGroup>
 

@@ -1,27 +1,24 @@
-module IntegrationTests.publisher
+﻿module IntegrationTests.consumer
 
 open System
 open Microsoft.Extensions.Configuration
 open NUnit.Framework
-open publisher
+open consumer
 
-
-let getPublisher() =
+let getConsumer() =
     let secret = ConfigurationBuilder().AddUserSecrets("5a837560-b6ce-4bd1-aefa-187bd319e09a").Build()
     let configuration = {Url=secret.["RabbitMQ:URL"]}
-    Publisher(configuration)
+    Consumer(configuration)
 
 
 [<Test>]
-let ``Publish do not raise an error`` () =
+let ``Consume`` () =
 
-    let publisher = getPublisher()
+    let consumer = getConsumer()
 
     let message = String.Format( "{{when:\"{0:u}\"}}", DateTime.UtcNow); 
 
-    publisher.Publish(message, "test", "")
+    let message = consumer.Consume("test", "")
 
     Assert.Pass()
-
-
 

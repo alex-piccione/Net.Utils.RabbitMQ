@@ -14,7 +14,6 @@ type Publisher(config:Config) =
     member this.Publish(message:string, exchange:string, routingKey:string) = 
         let factory = new ConnectionFactory()
         factory.Uri <- Uri(config.Url)
-        //factory.Endpoint <- AmqpTcpEndpoint(config.Url)
         use connection = factory.CreateConnection()
         use channel = connection.CreateModel()
 
@@ -25,4 +24,5 @@ type Publisher(config:Config) =
         channel.BasicPublish(exchange=exchange, routingKey=routingKey, basicProperties=null, body=body)
 
 
+    
 
