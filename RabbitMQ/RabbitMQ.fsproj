@@ -7,7 +7,6 @@
 
   <ItemGroup>
     <Compile Include="publisher.fs" />
-    <Compile Include="Library.fs" />
   </ItemGroup>
 
   <ItemGroup>
