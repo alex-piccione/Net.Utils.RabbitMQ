@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="API responses\queues.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FsUnit" Version="4.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="3.1.0" />
     <PackageReference Include="NUnit" Version="3.12.0" />

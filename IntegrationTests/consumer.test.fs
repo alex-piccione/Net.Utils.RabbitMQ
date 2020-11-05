@@ -3,6 +3,7 @@
 open System
 open Microsoft.Extensions.Configuration
 open NUnit.Framework
+open common
 open consumer
 
 let getConsumer() =

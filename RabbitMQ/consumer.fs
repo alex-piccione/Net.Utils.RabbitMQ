@@ -3,10 +3,10 @@
 open System
 open System.Text
 open RabbitMQ.Client
+open common
 
 
 
-type Config = {Url:string}
 
 type Consumer(config:Config) =
 
