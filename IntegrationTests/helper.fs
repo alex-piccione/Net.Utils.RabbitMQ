@@ -8,6 +8,7 @@ open Microsoft.Extensions.Configuration
 open NUnit.Framework
 open FsUnit
 open Newtonsoft.Json.Linq
+open Alex75.Utils.RabbitMQ
 open common
 
 let secret = ConfigurationBuilder().AddUserSecrets("5a837560-b6ce-4bd1-aefa-187bd319e09a").Build()
@@ -16,6 +17,23 @@ let vhost = secret.["RabbitMQ:vhost"]
 let username = secret.["RabbitMQ:username"]
 let password = secret.["RabbitMQ:password"]
 
+
+
+
+
+let createPublisher() =
+    let configuration = {Url=secret.["RabbitMQ:URL"]}
+    new Publisher(configuration)
+
+let createConsumer() =
+    let configuration = {Url=secret.["RabbitMQ:URL"]}
+    new Consumer(configuration)
+
+type TestObject (aString:string, aNumber:decimal, aDate:DateTime) = 
+
+    member this.AString with get() = aString
+    member this.ANumber with get() = aNumber
+    member this.ADate with get() = aDate
 
 
 

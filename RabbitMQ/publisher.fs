@@ -1,5 +1,4 @@
-﻿module publisher
-
+﻿namespace Alex75.Utils.RabbitMQ
 
 open System
 open System.Text
@@ -20,12 +19,11 @@ type Publisher(config:Config) =
 
 
     member this.CreateQueue(queue:string) =
-
         let result = channel.QueueDeclare(queue=queue, durable=false, exclusive=false, autoDelete = false, arguments = null)
         ()
 
     // publish to exchange or to queue ???
-    member this.Publish(message:string, exchange:string, routingKey:string) = 
+    member this.Send(message:string, exchange:string, routingKey:string) = 
         let factory = new ConnectionFactory()
         factory.Uri <- Uri(config.Url)
         use connection = factory.CreateConnection()

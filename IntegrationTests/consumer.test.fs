@@ -1,16 +1,13 @@
 ﻿module IntegrationTests.consumer
 
 open System
-open Microsoft.Extensions.Configuration
 open NUnit.Framework
 open FsUnit
 open common
-open consumer
+open System.Text
+open System.Text.Json
 
-let createConsumer() =
-    let secret = ConfigurationBuilder().AddUserSecrets("5a837560-b6ce-4bd1-aefa-187bd319e09a").Build()
-    let configuration = {Url=secret.["RabbitMQ:URL"]}
-    Consumer(configuration)
+
 
 
 [<Test>]
@@ -21,7 +18,7 @@ let ``Consume <should> create exchange and queue`` () =
     helper.deleteQueue(queue, false)
     helper.deleteExchange(exchange, false)
 
-    let consumer = createConsumer()
+    let consumer = helper.createConsumer()
 
     let message = String.Format("{{when:\"{0:u}\"}}", DateTime.UtcNow); 
 
@@ -37,3 +34,48 @@ let ``Consume <should> create exchange and queue`` () =
 
     helper.deleteQueue(queue, false)
     helper.deleteExchange(exchange, false)
+
+
+
+[<Test>]
+let ``StartReceiving consumes published messages`` () =
+
+    let consumer = helper.createConsumer()
+
+    let n = Random().Next(100).ToString()
+
+    let queue       = "test-queue-"+n
+    let exchange    = "test-exhange-"+n
+    let routingKey  = "test-key-"+n
+
+    helper.deleteQueue(queue, false)
+    helper.deleteExchange(exchange, false)
+
+    try 
+
+        let mutable receivedMessages = 0
+
+        // start receiving
+        consumer.StartReceiving(queue, exchange, routingKey, (fun _ -> receivedMessages <- receivedMessages+ 1))
+
+        let publisher = helper.createPublisher()
+
+        let message1 = helper.TestObject("string 1", 1m, DateTime.UtcNow)
+        let message2 = helper.TestObject("string 2", 2m, DateTime.UtcNow)
+        let message3 = helper.TestObject("string 3", 3m, DateTime.UtcNow)
+
+        // publish
+        publisher.Send(JsonSerializer.Serialize(message1), exchange, routingKey)
+        publisher.Send(JsonSerializer.Serialize(message2), exchange, routingKey)
+        publisher.Send(JsonSerializer.Serialize(message3), exchange, routingKey)
+
+        for i in 0..5 do
+            if receivedMessages < 3 then
+                Threading.Thread.Sleep(500)
+
+    
+        receivedMessages |> should equal 3
+    
+    finally
+        helper.deleteQueue(queue, false)
+        helper.deleteExchange(exchange, false)
