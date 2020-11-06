@@ -8,7 +8,6 @@ open publisher
 
 
 
-
 let getPublisher() =
     let secret = ConfigurationBuilder().AddUserSecrets("5a837560-b6ce-4bd1-aefa-187bd319e09a").Build()
     let configuration = {Url=secret.["RabbitMQ:URL"]}
@@ -18,9 +17,7 @@ let getPublisher() =
 [<Test>]
 let ``Publish will create the queue`` () =
 
-
-    helper.deleteQueue("test")
-
+    helper.deleteQueue("test", false)
 
     use publisher = getPublisher()
 
@@ -41,6 +38,3 @@ let ``Publish do not raise an error`` () =
     publisher.Publish(message, "test", "")
 
     Assert.Pass()
-
-
-

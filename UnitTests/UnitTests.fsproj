@@ -7,7 +7,10 @@
     <GenerateProgramFile>false</GenerateProgramFile>    
   </PropertyGroup>
 
+  <ItemGroup />
+
   <ItemGroup>
+    <Content Include="API responses\exchanges.json" />
     <EmbeddedResource Include="API responses\queues.json" />
   </ItemGroup>
 
