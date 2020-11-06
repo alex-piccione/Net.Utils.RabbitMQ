@@ -40,7 +40,7 @@ let ``Consume <should> create exchange and queue`` () =
 [<Test>]
 let ``StartReceiving consumes published messages`` () =
 
-    let consumer = helper.createConsumer()
+    use consumer = helper.createConsumer()
 
     let n = Random().Next(100).ToString()
 
@@ -56,7 +56,9 @@ let ``StartReceiving consumes published messages`` () =
         let mutable receivedMessages = 0
 
         // start receiving
-        consumer.StartReceiving(queue, exchange, routingKey, (fun _ -> receivedMessages <- receivedMessages+ 1))
+        let onReceived = (fun _ -> receivedMessages <- receivedMessages+ 1)
+        let onError = ignore
+        consumer.StartReceiving(queue, exchange, routingKey, onReceived, onError)
 
         let publisher = helper.createPublisher()
 
@@ -72,7 +74,8 @@ let ``StartReceiving consumes published messages`` () =
         for i in 0..5 do
             if receivedMessages < 3 then
                 Threading.Thread.Sleep(500)
-
+        
+        consumer.StopReceiving()
     
         receivedMessages |> should equal 3
     

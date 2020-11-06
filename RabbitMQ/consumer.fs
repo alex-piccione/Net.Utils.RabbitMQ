@@ -5,22 +5,30 @@ open System.Text
 open RabbitMQ.Client
 open common
 open RabbitMQ.Client.Events
+open System.Threading
 
 
-type ConsumerConfig = {
+type ConsumerConfig<'a> = {
     Url:string
     Exchange:string
     RoutingKey:string
     Queue:string
+    OnReceived: 'a -> unit
+    OnError: Exception -> unit
 }
 
-type Consumer(config:Config) =
-
+type Consumer(config:Config) = 
+    
     let factory = lazy(
         let factory = new ConnectionFactory(Uri=Uri(config.Url))
         factory.Uri <- Uri(config.Url)
         factory
     )
+
+    let connection = factory.Value.CreateConnection()
+    let channel = connection.CreateModel()
+
+    let mutable stop=false
 
     member this.Consume(queue:string, exchange:string, routingKey:string) =
 
@@ -43,10 +51,9 @@ type Consumer(config:Config) =
             message
 
 
-    member this.StartReceiving<'a>(queue:string, exchange:string, routingKey:string, received: 'a -> unit) =
+    member this.StartReceiving<'a>(queue:string, exchange:string, routingKey:string, received: 'a -> unit, onError: Exception -> unit) =
 
-        use connection = factory.Value.CreateConnection()
-        use channel = connection.CreateModel()
+        stop <- false
 
         // create the queue
         let result = channel.QueueDeclare(queue, durable=true, exclusive=false, autoDelete=false, arguments=null)
@@ -58,11 +65,32 @@ type Consumer(config:Config) =
 
         let parseContent (bytes:ReadOnlyMemory<byte>) = common.Deserialize<'a>(bytes)
 
+        let token = CancellationToken()
+
 
         let consumer = EventingBasicConsumer(channel)
         consumer.Received.Add(fun event -> 
-            // todo: catch error and raise event + retry
-            let item:'a = parseContent(event.Body)            
-            received(item)
+            try 
+                let item:'a = parseContent(event.Body)   
+                try 
+                    received item
+                finally ()
+            with e -> onError e             
         )
-        
+
+        Tasks.Task.Run( fun () ->
+            channel.BasicConsume(queue, autoAck=true, consumer=consumer) |> ignore
+            while not stop do
+                Thread.Sleep(500)
+            //(this :> IDisposable).Dispose()
+        ) |> ignore
+                
+    
+    member this.StopReceiving() = stop <- true
+
+    interface IDisposable with
+        member this.Dispose() =
+            channel.Dispose()
+            connection.Dispose()
+
+

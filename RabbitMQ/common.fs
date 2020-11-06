@@ -1,11 +1,9 @@
 ﻿module common
 
 open System
-open System.IO
 open System.Text.Json
 open System.Text
 
-open FSharp.Data
 
 type Config = {Url:string}
 

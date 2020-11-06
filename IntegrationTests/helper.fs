@@ -5,8 +5,6 @@ open System.Net.Http
 open System.Text
 open Microsoft.Extensions.Configuration
 
-open NUnit.Framework
-open FsUnit
 open Newtonsoft.Json.Linq
 open Alex75.Utils.RabbitMQ
 open common
