@@ -37,7 +37,7 @@ jobs:
     - name: Pack
       run: |
         echo Build package Version=$VERSION
-        dotnet pack -c Release --no-restore --include-symbols $PROJECT_FOLDER/*.*proj -p:PackageVersion=$VERSION -o nupkgs
+        dotnet pack -c Release --no-build --include-symbols $PROJECT_FOLDER/*.*proj -p:PackageVersion=$VERSION -o nupkgs
     #- name: Upload Artifact
     #  uses: actions/upload-artifact@v2
     #  with:
