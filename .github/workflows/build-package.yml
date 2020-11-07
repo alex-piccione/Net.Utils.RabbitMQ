@@ -14,6 +14,7 @@ on:
 env:
   PROJECT_FOLDER: RabbitMQ
   VERSION: "0.1.${{github.run_number}}"  # $GITHUB_RUN_NUMBER can't be use here'
+  NUGET_API_KEY: ${{secrets.NUGET_API_KEY}}
 
 jobs:
   build:
@@ -37,14 +38,18 @@ jobs:
       run: |
         echo Build package Version=$VERSION
         dotnet pack -c Release --no-restore --include-symbols $PROJECT_FOLDER/*.*proj -p:PackageVersion=$VERSION -o nupkgs
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: nupkg
-        # path: ./$PROJECT_FOLDER/bin/Release/*.nupkg  ... also this does not work
-        #path: ./${{env.PROJECT_FOLDER}}/bin/Release/*.nupkg
-        path: ./nupkgs/*.nupkg
-        if-no-files-found: error
+    #- name: Upload Artifact
+    #  uses: actions/upload-artifact@v2
+    #  with:
+    #    name: nupkg
+    #    path: ./nupkgs/*.nupkg
+    #    if-no-files-found: error
 
+    - name: Publish to NuGet
+      run: |
+        echo Publish package Version $VERSION
+        dotnet nuget push ./nupkgs/*.nupkg  --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json
+        
+      
 
 
