@@ -1,9 +1,11 @@
 # Net.Utils.RabbitMQ
-RabbitMQ helper library to publish an receive messages on a RabbitMQ instance. 
+RabbitMQ helper library to publish an receive messages on a RabbitMQ instance.  
+Messages are object stored as JSON in the queues.   
+The JSON serialization/deserialization is transparent to the user.  
 
 
 CD/CI: GitHub  
-Nuget package: work in progress
+[![NuGet](https://img.shields.io/nuget/v/Alex75.Utils.RabbitMQ.svg)](https://www.nuget.org/packages/Alex75.Utils.RabbitMQ)
 
 
 ## How to use
