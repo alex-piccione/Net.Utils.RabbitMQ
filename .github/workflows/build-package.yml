@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 env:
-  PROJECT_PATH: Net.Utils.RabbitMQ/RabbitMQ
+  PROJECT_PATH: RabbitMQ
   PACKAGE: Alex75.Utils.RabbitMQ
   VERSION: "0.1.$GITHUB_RUN_NUMBER"
 
