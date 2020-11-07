@@ -31,3 +31,9 @@ jobs:
       run: |
         echo #dotnet pack -c Release --no-restore --include-symbols -p:PackageVersion=$VERSION
         echo version=$VERSION.$GITHUB_RUN_ID
+        dotnet pack -c Release --no-restore --include-symbols -p:PackageVersion=$VERSION.$GITHUB_RUN_ID
+    #- name: Upload Artifact
+    #  uses: actions/upload-artifact@v2
+    #  with:
+    #    name: nupkg
+    #    path: ${{} env.}
