@@ -37,4 +37,5 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: nupkg
-        path: ./$PROJECT_FOLDER/bin/Release/*.nupkg
+        # path: ./$PROJECT_FOLDER/bin/Release/*.nupkg  ... also this does not work
+        path: ./${{env.PROJECT_FOLDER}}/bin/Release/*.nupkg  ... also this does not work
