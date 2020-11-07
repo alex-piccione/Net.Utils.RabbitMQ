@@ -8,8 +8,8 @@
 
   <ItemGroup>
     <Compile Include="common.fs" />
-    <Compile Include="_Consumer.fs" />
-    <Compile Include="_Publisher.fs" />
+    <Compile Include="Consumer.fs" />
+    <Compile Include="Publisher.fs" />
   </ItemGroup>
 
   <ItemGroup>
