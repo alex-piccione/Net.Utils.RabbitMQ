@@ -7,9 +7,8 @@ on:
     branches: [ main ]
 
 env:
-  PROJECT_PATH: RabbitMQ
-  PACKAGE: Alex75.Utils.RabbitMQ
-  VERSION: "0.1.${{github.run_number}}"
+  PROJECT_FOLDER: RabbitMQ
+  VERSION: "0.1.${{github.run_number}}"  # $GITHUB_RUN_NUMBER can't be use here'
 
 jobs:
   build:
@@ -33,10 +32,9 @@ jobs:
       run: |
         echo #dotnet pack -c Release --no-restore --include-symbols -p:PackageVersion=$VERSION
         echo version=$VERSION
-        echo version 2=0.x.$GITHUB_RUN_NUMBER
-        dotnet pack -c Release --no-restore --include-symbols $PROJECT_PATH/*.*proj -p:PackageVersion=$VERSION
-    #- name: Upload Artifact
-    #  uses: actions/upload-artifact@v2
-    #  with:
-    #    name: nupkg
-    #    path: ${{} env.}
+        dotnet pack -c Release --no-restore --include-symbols $PROJECT_FOLDER/*.*proj -p:PackageVersion=$VERSION
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: nupkg
+        path: ./$PROJECT_FOLDER/bin/Release/*.nupkg

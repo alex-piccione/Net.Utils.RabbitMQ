@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>5a837560-b6ce-4bd1-aefa-187bd319e09a</UserSecretsId>
     <RootNamespace>Alex75.Utils.RabbitMQ</RootNamespace>
+    <PackageId>Alex75.Utils.RabbitMQ</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
