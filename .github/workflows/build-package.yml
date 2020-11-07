@@ -9,8 +9,7 @@ on:
 env:
   PROJECT_PATH: RabbitMQ
   PACKAGE: Alex75.Utils.RabbitMQ
-  VERSION: "0.1.${{GITHUB_RUN_NUMBER}}"
-  VERSION_2: "0.1.${{github.run_number}}"
+  VERSION: "0.1.${{github.run_number}}"
 
 jobs:
   build:
@@ -34,7 +33,7 @@ jobs:
       run: |
         echo #dotnet pack -c Release --no-restore --include-symbols -p:PackageVersion=$VERSION
         echo version=$VERSION
-        echo version 2=$VERSION_2
+        echo version 2=0.x.$GITHUB_RUN_NUMBER
         dotnet pack -c Release --no-restore --include-symbols $PROJECT_PATH/*.*proj -p:PackageVersion=$VERSION
     #- name: Upload Artifact
     #  uses: actions/upload-artifact@v2
