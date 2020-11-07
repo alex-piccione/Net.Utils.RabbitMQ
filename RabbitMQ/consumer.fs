@@ -82,7 +82,6 @@ type Consumer(config:Config) =
             channel.BasicConsume(queue, autoAck=true, consumer=consumer) |> ignore
             while not stop do
                 Thread.Sleep(500)
-            //(this :> IDisposable).Dispose()
         ) |> ignore
                 
     
