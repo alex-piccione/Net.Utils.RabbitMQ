@@ -35,8 +35,7 @@ jobs:
 
     - name: Pack
       run: |
-        echo #dotnet pack -c Release --no-restore --include-symbols -p:PackageVersion=$VERSION
-        echo version=$VERSION
+        echo Build package Version=$VERSION
         dotnet pack -c Release --no-restore --include-symbols $PROJECT_FOLDER/*.*proj -p:PackageVersion=$VERSION -o nupkgs
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
@@ -45,6 +44,7 @@ jobs:
         # path: ./$PROJECT_FOLDER/bin/Release/*.nupkg  ... also this does not work
         #path: ./${{env.PROJECT_FOLDER}}/bin/Release/*.nupkg
         path: nupkgs/*.nupkg
+        if-no-files-found: error
 
 
 
