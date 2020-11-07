@@ -43,7 +43,7 @@ jobs:
         name: nupkg
         # path: ./$PROJECT_FOLDER/bin/Release/*.nupkg  ... also this does not work
         #path: ./${{env.PROJECT_FOLDER}}/bin/Release/*.nupkg
-        path: nupkgs/*.nupkg
+        path: ./nupkgs/*.nupkg
         if-no-files-found: error
 
 
