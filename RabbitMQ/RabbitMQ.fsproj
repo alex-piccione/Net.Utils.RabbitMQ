@@ -6,7 +6,7 @@
     <RootNamespace>Alex75.Utils.RabbitMQ</RootNamespace>
     <Authors>Alessandro Piccione</Authors>
     <PackageId>Alex75.Utils.RabbitMQ</PackageId>
-    <PackageIconUrl />
+    <PackageIcon>Alex75.Utils.RabbitMQ.png</PackageIcon>
     <PackageTags>RabbitMQ</PackageTags>
   </PropertyGroup>
 
@@ -17,7 +17,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Alex75.Utils.RabbitMQ.png" />
+    <None Include="Alex75.Utils.RabbitMQ.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
