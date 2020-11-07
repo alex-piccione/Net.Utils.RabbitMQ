@@ -26,12 +26,6 @@ type Publisher(config:Config) =
     member this.Send(message:string, exchange:string, routingKey:string) = 
         let factory = new ConnectionFactory()
         factory.Uri <- Uri(config.Url)
-        use connection = factory.CreateConnection()
-        use channel = connection.CreateModel()
-
-        // create the queue
-        //let result = channel.QueueDeclare(queue, durable=true, exclusive=false, autoDelete=false, arguments=null)
-        
 
         let body = ReadOnlyMemory(Encoding.UTF8.GetBytes(message))
 
