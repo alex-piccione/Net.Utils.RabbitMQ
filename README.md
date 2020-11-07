@@ -2,7 +2,8 @@
 RabbitMQ helper library to publish an receive messages on a RabbitMQ instance. 
 
 
-Nuget package: \<not yet created\>
+CD/CI: GitHub  
+Nuget package: work in progress
 
 
 ## How to use
@@ -26,9 +27,7 @@ publisher.Publish(<data:obj>)
 ``` fsharp
 let consumer = consumer.Consumer(<RabbitMQ-URL>, <exchange:string>, <queue:string> <routingKey:string>)
 
-
 consumer.StartConsuming<'a>( <received: fun () -> a> )
-
 
 
 ```
