@@ -58,9 +58,9 @@ type Consumer(config:Config) =
             with e -> onError e             
         )
 
-        async {
+        async {            
+            channel.BasicConsume(queue, autoAck=true, consumer=consumer) |> ignore            
             while not stop do
-                channel.BasicConsume(queue, autoAck=true, consumer=consumer) |> ignore            
                 Thread.Sleep(500)
         } |> Async.Start
 
