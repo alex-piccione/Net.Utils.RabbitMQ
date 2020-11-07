@@ -93,12 +93,18 @@ let deleteExchange (name, failsIfNotFound) =
     use client = new HttpClient()
     client.BaseAddress <- Uri(sprintf "%s/%s" baseAddress vhost)
     client.DefaultRequestHeaders.Add("Authorization", basiAuth())
+
+    let mutable counter = 1
+    while counter < 20 && listExchanges() |> List.exists (fun ex -> ex.Name = name) do
+
     let response = client.DeleteAsync(sprintf "api/exchanges/%s/%s" vhost name).Result
 
     match response.IsSuccessStatusCode with
     | true -> ()
     | false when response.StatusCode = Net.HttpStatusCode.NotFound && not failsIfNotFound -> ()
     | _ -> failwithf "Failed to delete exchange \"%s\". (%O) %s" name response.StatusCode response.ReasonPhrase
+
+    Threading.Thread.Sleep(250)
 
 
 let createVHost (name) = 

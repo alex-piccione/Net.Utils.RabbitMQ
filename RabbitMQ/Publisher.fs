@@ -3,17 +3,10 @@
 open System
 open System.Text
 open RabbitMQ.Client
-open common
 
 
 type Publisher(url:string, exchange:string, queue:string option) =    
     
-    //let factory = lazy(
-    //    let factory = new ConnectionFactory(Uri=Uri(url))
-    //    //factory.Uri <- Uri(config.Url)
-    //    factory
-    //)
-
     let factory = new ConnectionFactory(Uri=Uri(url))
     let connection = factory.CreateConnection()
     let channel = connection.CreateModel()

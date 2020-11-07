@@ -6,6 +6,7 @@ open RabbitMQ.Client
 open common
 open RabbitMQ.Client.Events
 open System.Threading
+open System.Threading.Tasks
 
 
 type ConsumerConfig<'a> = {
@@ -42,7 +43,6 @@ type Consumer(config:Config) =
         // and bind it to the exchange
         channel.QueueBind(queue, exchange, routingKey, arguments=null)
 
-
         let parseContent (bytes:ReadOnlyMemory<byte>) = common.Deserialize<'a>(bytes)
 
         let token = CancellationToken()
@@ -58,17 +58,12 @@ type Consumer(config:Config) =
             with e -> onError e             
         )
 
-        //async {
-        //    channel.BasicConsume(queue, autoAck=true, consumer=consumer) |> ignore
-        //    while not stop do
-        //        Thread.Sleep(500)
-        //} |> Async.RunSynchronously
-
-        Tasks.Task.Run( fun () ->
-            channel.BasicConsume(queue, autoAck=true, consumer=consumer) |> ignore
+        async {
             while not stop do
+                channel.BasicConsume(queue, autoAck=true, consumer=consumer) |> ignore            
                 Thread.Sleep(500)
-        ) |> ignore
+        } |> Async.Start
+
                 
     
     member this.StopReceiving() = stop <- true

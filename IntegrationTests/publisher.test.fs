@@ -27,9 +27,6 @@ let ``Send <should> create the exchange`` () =
 let ``Send <should> publish a message in the exchange`` () =
     // use a diffrent name to avoid interferences with other tests
     helper.deleteExchange("test--1", false)
-    let mutable counter = 1
-    while counter < 20 && helper.listExchanges() |> List.exists (fun ex -> ex.Name = "test--1") do
-        Threading.Thread.Sleep(250)
 
     use publisher = new Publisher(secrets.URL, "test--1")
     let message = String.Format( "{{when:\"{0:u}\"}}", DateTime.UtcNow); 
