@@ -3,28 +3,15 @@
 open System
 open System.Net.Http
 open System.Text
-open Microsoft.Extensions.Configuration
 
 open Newtonsoft.Json.Linq
 open Alex75.Utils.RabbitMQ
+open secrets
 open common
 
-let secret = ConfigurationBuilder().AddUserSecrets("5a837560-b6ce-4bd1-aefa-187bd319e09a").Build()
-let baseAddress = secret.["RabbitMQ:API base address"]
-let vhost = secret.["RabbitMQ:vhost"]
-let username = secret.["RabbitMQ:username"]
-let password = secret.["RabbitMQ:password"]
-
-
-
-
-
-let createPublisher() =
-    let configuration = {Url=secret.["RabbitMQ:URL"]}
-    new Publisher(configuration)
 
 let createConsumer() =
-    let configuration = {Url=secret.["RabbitMQ:URL"]}
+    let configuration = {Url=secrets.URL}
     new Consumer(configuration)
 
 type TestObject (aString:string, aNumber:decimal, aDate:DateTime) = 
@@ -71,8 +58,17 @@ let listExchanges () =
     if not(response.IsSuccessStatusCode) then failwithf "Failed to load exchanges. (%O) %s" response.StatusCode response.ReasonPhrase
 
     let json = response.Content.ReadAsStringAsync().Result    
+
+    // easy counter (none = zero)
+    let parseMessageStats (json:JToken) = 
+        match json.["message_stats"] with
+        | null -> 0
+        | stats -> stats.Value<int>("publish_in")
+        
+
     let parseExchange (json:JToken) = {
         Name=json.Value<string>("name"); Type=json.Value<string>("type"); VHost= json.Value<string>("vhost")
+        MessageStats_PublishIn = parseMessageStats json
     }
 
     let exchanges = JArray.Parse(json) |> Seq.map parseExchange |> List.ofSeq

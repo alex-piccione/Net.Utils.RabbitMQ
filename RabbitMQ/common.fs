@@ -8,9 +8,10 @@ open System.Text
 type Config = {Url:string}
 
 type Exchange = {
-    Name:string; 
-    VHost:string; 
+    Name:string
+    VHost:string
     Type:string
+    MessageStats_PublishIn:int
 }
 
 

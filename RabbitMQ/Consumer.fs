@@ -37,7 +37,7 @@ type Consumer(config:Config) =
 
         // create the queue
         let result = channel.QueueDeclare(queue, durable=true, exclusive=false, autoDelete=false, arguments=null)
-        // create teh exchage 
+        // create the exchange 
         channel.ExchangeDeclare(exchange, ``type``="direct", durable=true, autoDelete=false, arguments=null)
         // and bind it to the exchange
         channel.QueueBind(queue, exchange, routingKey, arguments=null)
@@ -57,6 +57,12 @@ type Consumer(config:Config) =
                 finally ()
             with e -> onError e             
         )
+
+        //async {
+        //    channel.BasicConsume(queue, autoAck=true, consumer=consumer) |> ignore
+        //    while not stop do
+        //        Thread.Sleep(500)
+        //} |> Async.RunSynchronously
 
         Tasks.Task.Run( fun () ->
             channel.BasicConsume(queue, autoAck=true, consumer=consumer) |> ignore

@@ -1,37 +1,51 @@
+[<NUnit.Framework.Category("Publisher")>]
 module IntegrationTests.publisher
 
 open System
 open NUnit.Framework
+open FsUnit
+
+open Alex75.Utils.RabbitMQ
 
 
 [<Test>]
-let ``Send will create the queue`` () =
+let ``Send <should> create the exchange`` () =
 
-    helper.deleteQueue("test", false)
-
-    use publisher = helper.createPublisher()
-
+    helper.deleteExchange("test", false)
+    use publisher = new Publisher(secrets.URL, "test")
     let message = String.Format( "{{when:\"{0:u}\"}}", DateTime.UtcNow); 
 
     // act
     publisher.Send(message, "test", "")
 
-    Assert.Pass()
+    helper.listExchanges() |> List.exists (fun ex -> ex.Name = "test") |> should be True
+
+    helper.deleteExchange("test", false)
 
 
 [<Test>]
-let ``Send do not raise an error`` () =
+let ``Send <should> publish a message in the exchange`` () =
+    // use a diffrent name to avoid interferences with other tests
+    helper.deleteExchange("test--1", false)
+    let mutable counter = 1
+    while counter < 20 && helper.listExchanges() |> List.exists (fun ex -> ex.Name = "test--1") do
+        Threading.Thread.Sleep(250)
 
-    use publisher = helper.createPublisher()
-
+    use publisher = new Publisher(secrets.URL, "test--1")
     let message = String.Format( "{{when:\"{0:u}\"}}", DateTime.UtcNow); 
 
     // act
-    publisher.Send(message, "test", "")
+    publisher.Send(message, "test--1", "")    
+    
+    // API find the message after some time...
+    let mutable found = false
+    for n in 1..50 do
+        if not found then
+            let exchanges = helper.listExchanges() |> List.find (fun ex -> ex.Name = "test--1")
+            found <- exchanges.MessageStats_PublishIn = 1
+            if exchanges.MessageStats_PublishIn > 1 then failwith "too many !!!"
+            Threading.Thread.Sleep(250)
 
-    Assert.Pass()
+    found |> should be True
 
-[<Test>]
-let ``Send publish a message in the exchange`` () =
-
-    ()
+    helper.deleteExchange("test", false)

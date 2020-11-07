@@ -1,13 +1,15 @@
-﻿module IntegrationTests.consumer
+﻿[<NUnit.Framework.Category("Consumer")>]
+module IntegrationTests.consumer
 
 open System
+open System.Text.Json
 open NUnit.Framework
 open FsUnit
-open System.Text.Json
+open Alex75.Utils.RabbitMQ
 
 
 [<Test>]
-let ``StartReceiving consumes published messages`` () =
+let ``StartReceiving <should> consume published messages`` () =
 
     use consumer = helper.createConsumer()
 
@@ -29,7 +31,7 @@ let ``StartReceiving consumes published messages`` () =
         let onError = ignore
         consumer.StartReceiving(queue, exchange, routingKey, onReceived, onError)
 
-        use publisher = helper.createPublisher()
+        use publisher = new Publisher(secrets.URL, exchange)
 
         let message1 = helper.TestObject("string 1", 1m, DateTime.UtcNow)
         let message2 = helper.TestObject("string 2", 2m, DateTime.UtcNow)

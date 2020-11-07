@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="secrets.fs" />
     <Compile Include="helper.fs" />
     <Compile Include="publisher.test.fs" />
     <Compile Include="consumer.test.fs" />
