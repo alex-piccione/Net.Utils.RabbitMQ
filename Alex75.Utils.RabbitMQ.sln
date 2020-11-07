@@ -7,10 +7,11 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "RabbitMQ", "RabbitMQ\Rabbit
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "UnitTests", "UnitTests\UnitTests.fsproj", "{7F19348D-C386-4EEF-8167-EAD09BD7D90C}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "IntegrationTests", "IntegrationTests\IntegrationTests.fsproj", "{CA0DDC71-60FE-41E5-AEFC-38DF2D35FD69}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "IntegrationTests", "IntegrationTests\IntegrationTests.fsproj", "{CA0DDC71-60FE-41E5-AEFC-38DF2D35FD69}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D0C828AC-1746-4A3D-B01D-4A6A711C25F0}"
 	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build-package.yml = .github\workflows\build-package.yml
 		README.md = README.md
 	EndProjectSection
 EndProject
